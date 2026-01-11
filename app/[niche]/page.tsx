@@ -11,7 +11,8 @@ export default function NichePage() {
   const router = useRouter()
   const { data } = useAdmin()
 
-  const category = data.mainCards.find((c) => c.id === params.niche)
+  const nicheId = Array.isArray(params.niche) ? params.niche[0] : params.niche
+  const category = data.mainCards.find((c) => c.id === nicheId)
   const categoryContents = category ? data.categoryContents[category.id] || [] : []
 
   if (!category) {
