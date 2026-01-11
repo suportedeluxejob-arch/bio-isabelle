@@ -3,9 +3,10 @@ import Link from "next/link"
 import { ChevronLeft } from "lucide-react"
 import { useAdmin } from "@/contexts/admin-context"
 import VisualBanner from "@/components/visual-banner"
+import { use } from "react"
 
-export default function NichePage({ params }: { params: { id: string } }) {
-  const { id } = params
+export default function NichePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   const { data } = useAdmin()
 
   const card = data.mainCards.find((c) => c.id === id)
