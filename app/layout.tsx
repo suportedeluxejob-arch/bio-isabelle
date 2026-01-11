@@ -7,10 +7,10 @@ import "./globals.css"
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 
 export const metadata: Metadata = {
-  title: "ISABELLE CALISTAR | Império de Links",
-  description: "Seja bem vindo ao império - Todos os links em um só lugar",
+  title: "Bio Isa Oficial",
+  description: "Todos os links em um só lugar",
   icons: {
-    icon: "/icon.svg",
+    icon: "",
   },
     generator: 'v0.app'
 }
