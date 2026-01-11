@@ -9,9 +9,10 @@ import { ArrowLeft, Crown } from "lucide-react"
 export default function NichePage() {
   const params = useParams()
   const router = useRouter()
-  const { siteData } = useAdmin()
+  const { data } = useAdmin()
 
-  const category = siteData.categories.find((c) => c.slug === params.niche)
+  const category = data.mainCards.find((c) => c.id === params.niche)
+  const categoryContents = category ? data.categoryContents[category.id] || [] : []
 
   if (!category) {
     return (
@@ -32,7 +33,7 @@ export default function NichePage() {
       <div className="max-w-lg mx-auto pb-12">
         {/* Hero Section */}
         <div className="relative h-48 overflow-hidden">
-          <Image src={category.coverImage || "/placeholder.svg"} alt={category.name} fill className="object-cover" />
+          <Image src={category.coverImage || "/placeholder.svg"} alt={category.label} fill className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-[#0a0a0a]" />
 
           {/* Back Button */}
@@ -46,10 +47,9 @@ export default function NichePage() {
           {/* Category Title */}
           <div className="absolute bottom-4 left-4 right-4 z-10">
             <div className="flex items-center gap-3">
-              <span className="text-3xl">{category.icon}</span>
               <div>
-                <h1 className="text-2xl font-bold empire-gold-gradient">{category.name}</h1>
-                <p className="text-gray-400 text-sm">{category.description}</p>
+                <h1 className="text-2xl font-bold empire-gold-gradient">{category.label}</h1>
+                <p className="text-gray-400 text-sm">{category.sublabel}</p>
               </div>
             </div>
           </div>
@@ -58,36 +58,21 @@ export default function NichePage() {
         {/* Content */}
         <main className="px-4 pt-6 space-y-6">
           {/* Visual Banners */}
-          {category.visualBanners.length > 0 && (
+          {categoryContents.length > 0 && (
             <section>
               <div className="grid gap-4">
-                {category.visualBanners.map((banner) => (
+                {categoryContents.map((banner) => (
                   <VisualBanner
                     key={banner.id}
                     title={banner.title}
-                    description={banner.description}
                     image={banner.image}
-                    url={banner.url}
-                    badge={banner.badge}
+                    link={banner.link}
+                    accentColor={category.accentColor}
                   />
                 ))}
               </div>
             </section>
           )}
-
-          {/* Links */}
-          <section>
-            <h2 className="text-lg font-bold empire-gold mb-4 flex items-center gap-2">
-              <span className="w-6 h-px bg-gradient-to-r from-[#d4af37] to-transparent" />
-              LINKS
-              <span className="w-6 h-px bg-gradient-to-l from-[#d4af37] to-transparent" />
-            </h2>
-            <div className="space-y-3">
-              {category.links.map((link) => (
-                <EmpireCard key={link.id} title={link.title} url={link.url} featured={link.featured} />
-              ))}
-            </div>
-          </section>
 
           {/* Back to Home Button */}
           <div className="pt-4">

@@ -49,7 +49,7 @@ export default function AdminPanel() {
     sublabel: "",
     path: "",
     coverImage: "",
-    type: "PERSONALIZADO" as const,
+    type: "" as "PARCERIAS" | "ADULTO" | "SOCIAL" | "LOJA" | "PERSONALIZADO",
     accentColor: "#8b5cf6",
   })
 

@@ -4,8 +4,9 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from "
 import { type SiteData, defaultData } from "@/lib/default-data"
 import { subscribeSiteData, saveSiteData, loginAdmin, logoutAdmin, subscribeAuthState } from "@/lib/firebase"
 
-interface AdminContextType {
+export interface AdminContextType {
   data: SiteData
+  siteData: SiteData
   isAuthenticated: boolean
   isLoading: boolean
   login: (email: string, password: string) => Promise<boolean>
@@ -140,6 +141,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     <AdminContext.Provider
       value={{
         data,
+        siteData: data,
         isAuthenticated,
         isLoading,
         login,
