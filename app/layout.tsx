@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "",
   },
-    generator: 'v0.app'
+    generator: 'Isa calistar'
 }
 
 export const viewport: Viewport = {
