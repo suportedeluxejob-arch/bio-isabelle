@@ -7,10 +7,10 @@ import "./globals.css"
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 
 export const metadata: Metadata = {
-  title: "WG Games",
+  title: "WE Patch Futebol",
   description: "Todos os links em um só lugar",
   icons: {
-    icon: "",
+    icon: "/favicon.png",
   },
     generator: '0'
 }
