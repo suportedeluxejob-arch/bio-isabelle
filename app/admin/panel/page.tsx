@@ -22,6 +22,9 @@ export default function AdminPanel() {
   } = useAdmin()
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<string>("profile")
+  const [profileForm, setProfileForm] = useState(data.profile)
+  const [isSavingProfile, setIsSavingProfile] = useState(false)
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle")
 
   // New Banner Form State
   const [showAddForm, setShowAddForm] = useState(false)
@@ -59,9 +62,25 @@ export default function AdminPanel() {
     }
   }, [isAuthenticated, isLoading, router])
 
+  useEffect(() => {
+    setProfileForm(data.profile)
+  }, [data.profile])
+
   const handleLogout = async () => {
     await logout()
     router.push("/")
+  }
+
+  const handleSaveProfile = async () => {
+    setIsSavingProfile(true)
+    setSaveStatus("saving")
+    updateProfile(profileForm)
+    // Wait a bit for the update to propagate
+    setTimeout(() => {
+      setSaveStatus("saved")
+      setIsSavingProfile(false)
+      setTimeout(() => setSaveStatus("idle"), 2000)
+    }, 500)
   }
 
   const handleAddBanner = (categoryId: string) => {
@@ -326,8 +345,8 @@ export default function AdminPanel() {
                 <label className="block text-sm text-gray-400 mb-2">Nome</label>
                 <input
                   type="text"
-                  value={data.profile.name}
-                  onChange={(e) => updateProfile({ name: e.target.value })}
+                  value={profileForm.name}
+                  onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
                   className="w-full px-4 py-2 bg-black border border-white/20 rounded-lg text-white focus:outline-none focus:border-purple-500"
                 />
               </div>
@@ -336,8 +355,8 @@ export default function AdminPanel() {
                 <label className="block text-sm text-gray-400 mb-2">URL da Foto de Perfil</label>
                 <input
                   type="text"
-                  value={data.profile.photo}
-                  onChange={(e) => updateProfile({ photo: e.target.value })}
+                  value={profileForm.photo}
+                  onChange={(e) => setProfileForm({ ...profileForm, photo: e.target.value })}
                   placeholder="/profile.jpg ou https://..."
                   className="w-full px-4 py-2 bg-black border border-white/20 rounded-lg text-white focus:outline-none focus:border-purple-500"
                 />
@@ -347,8 +366,8 @@ export default function AdminPanel() {
                 <label className="block text-sm text-gray-400 mb-2">Link Instagram</label>
                 <input
                   type="text"
-                  value={data.profile.instagramLink}
-                  onChange={(e) => updateProfile({ instagramLink: e.target.value })}
+                  value={profileForm.instagramLink}
+                  onChange={(e) => setProfileForm({ ...profileForm, instagramLink: e.target.value })}
                   className="w-full px-4 py-2 bg-black border border-white/20 rounded-lg text-white focus:outline-none focus:border-purple-500"
                 />
               </div>
@@ -357,13 +376,27 @@ export default function AdminPanel() {
                 <label className="block text-sm text-gray-400 mb-2">Bio</label>
                 <input
                   type="text"
-                  value={data.profile.bio}
-                  onChange={(e) => updateProfile({ bio: e.target.value })}
+                  value={profileForm.bio}
+                  onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
                   className="w-full px-4 py-2 bg-black border border-white/20 rounded-lg text-white focus:outline-none focus:border-purple-500"
                 />
               </div>
 
-              <p className="text-green-500 text-sm">Salvo automaticamente no Firebase</p>
+              <button
+                onClick={handleSaveProfile}
+                disabled={isSavingProfile}
+                className={`w-full px-4 py-2 rounded-lg font-medium text-white transition-colors ${
+                  saveStatus === "saved"
+                    ? "bg-green-600 hover:bg-green-700"
+                    : saveStatus === "saving"
+                      ? "bg-blue-600 opacity-70 cursor-not-allowed"
+                      : "bg-purple-600 hover:bg-purple-700"
+                }`}
+              >
+                {saveStatus === "saving" && "Salvando..."}
+                {saveStatus === "saved" && "✓ Salvo com sucesso!"}
+                {saveStatus === "idle" && "Salvar Perfil"}
+              </button>
             </div>
           )}
 
