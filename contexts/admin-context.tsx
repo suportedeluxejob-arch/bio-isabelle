@@ -26,11 +26,11 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<SiteData>(defaultData)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [dataLoaded, setDataLoaded] = useState(false)
 
   useEffect(() => {
     const unsubscribeAuth = subscribeAuthState((user: unknown) => {
       setIsAuthenticated(!!user)
-      setIsLoading(false)
     })
 
     return () => unsubscribeAuth()
@@ -45,6 +45,8 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         saveSiteData(defaultData)
         setData(defaultData)
       }
+      setDataLoaded(true)
+      setIsLoading(false)
     })
 
     return () => unsubscribeData()
