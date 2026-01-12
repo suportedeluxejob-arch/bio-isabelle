@@ -12,6 +12,9 @@ export interface AdminContextType {
   login: (email: string, password: string) => Promise<boolean>
   logout: () => Promise<void>
   updateProfile: (profile: Partial<SiteData["profile"]>) => void
+  addSocialLink: (link: Omit<SiteData["profile"]["socialLinks"][0], "id">) => void
+  updateSocialLink: (id: string, link: Partial<SiteData["profile"]["socialLinks"][0]>) => void
+  deleteSocialLink: (id: string) => void
   addMainCard: (card: Omit<SiteData["mainCards"][0], "id">) => void
   updateMainCard: (id: string, card: Partial<SiteData["mainCards"][0]>) => void
   deleteMainCard: (id: string) => void
@@ -73,6 +76,26 @@ export function AdminProvider({ children }: { children: ReactNode }) {
 
   const updateProfile = (profile: Partial<SiteData["profile"]>) => {
     const updated = { ...data, profile: { ...data.profile, ...profile } }
+    saveData(updated)
+  }
+
+  const addSocialLink = (link: Omit<SiteData["profile"]["socialLinks"][0], "id">) => {
+    const id = Date.now().toString()
+    const newLink = { ...link, id } as SiteData["profile"]["socialLinks"][0]
+    const socialLinks = [...(data.profile.socialLinks || []), newLink]
+    const updated = { ...data, profile: { ...data.profile, socialLinks } }
+    saveData(updated)
+  }
+
+  const updateSocialLink = (id: string, link: Partial<SiteData["profile"]["socialLinks"][0]>) => {
+    const socialLinks = (data.profile.socialLinks || []).map((l) => (l.id === id ? { ...l, ...link } : l))
+    const updated = { ...data, profile: { ...data.profile, socialLinks } }
+    saveData(updated)
+  }
+
+  const deleteSocialLink = (id: string) => {
+    const socialLinks = (data.profile.socialLinks || []).filter((l) => l.id !== id)
+    const updated = { ...data, profile: { ...data.profile, socialLinks } }
     saveData(updated)
   }
 
@@ -149,6 +172,9 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         login,
         logout,
         updateProfile,
+        addSocialLink,
+        updateSocialLink,
+        deleteSocialLink,
         addMainCard,
         updateMainCard,
         deleteMainCard,

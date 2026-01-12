@@ -5,6 +5,13 @@ export interface BannerItem {
   link: string
 }
 
+export interface SocialLink {
+  id: string
+  name: string
+  url: string
+  icon: string
+}
+
 export interface MainCard {
   id: string
   type: "PARCERIAS" | "ADULTO" | "SOCIAL" | "LOJA" | "PERSONALIZADO"
@@ -20,6 +27,7 @@ export interface ProfileData {
   photo: string
   bio: string
   instagramLink: string
+  socialLinks?: SocialLink[]
 }
 
 export interface SiteData {
@@ -34,6 +42,20 @@ export const defaultData: SiteData = {
     photo: "/profile-woman-avatar.jpg",
     bio: "Premium Verified Account",
     instagramLink: "https://www.instagram.com/_portugaesteticautomotiva/",
+    socialLinks: [
+      {
+        id: "1",
+        name: "Instagram",
+        url: "https://www.instagram.com/_portugaesteticautomotiva/",
+        icon: "instagram",
+      },
+      {
+        id: "2",
+        name: "TikTok",
+        url: "https://www.tiktok.com",
+        icon: "tiktok",
+      },
+    ],
   },
   mainCards: [
     {

@@ -13,6 +13,9 @@ export default function AdminPanel() {
     isLoading,
     logout,
     updateProfile,
+    addSocialLink,
+    updateSocialLink,
+    deleteSocialLink,
     addMainCard,
     updateMainCard,
     deleteMainCard,
@@ -25,6 +28,10 @@ export default function AdminPanel() {
   const [profileForm, setProfileForm] = useState(data.profile)
   const [isSavingProfile, setIsSavingProfile] = useState(false)
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle")
+  const [showAddSocialLink, setShowAddSocialLink] = useState(false)
+  const [newSocialLink, setNewSocialLink] = useState({ name: "", url: "", icon: "" })
+  const [editingSocialLinkId, setEditingSocialLinkId] = useState<string | null>(null)
+  const [editSocialLinkForm, setEditSocialLinkForm] = useState({ name: "", url: "", icon: "" })
 
   // New Banner Form State
   const [showAddForm, setShowAddForm] = useState(false)
@@ -81,6 +88,25 @@ export default function AdminPanel() {
       setIsSavingProfile(false)
       setTimeout(() => setSaveStatus("idle"), 2000)
     }, 500)
+  }
+
+  const handleAddSocialLink = () => {
+    if (!newSocialLink.name || !newSocialLink.url) return
+    addSocialLink(newSocialLink)
+    setNewSocialLink({ name: "", url: "", icon: "" })
+    setShowAddSocialLink(false)
+  }
+
+  const startEditingSocialLink = (link: any) => {
+    setEditingSocialLinkId(link.id)
+    setEditSocialLinkForm({ name: link.name, url: link.url, icon: link.icon })
+  }
+
+  const saveEditSocialLink = () => {
+    if (editingSocialLinkId) {
+      updateSocialLink(editingSocialLinkId, editSocialLinkForm)
+      setEditingSocialLinkId(null)
+    }
   }
 
   const handleAddBanner = (categoryId: string) => {
@@ -382,10 +408,141 @@ export default function AdminPanel() {
                 />
               </div>
 
+              {/* Social Links Section */}
+              <div className="mt-6 pt-6 border-t border-white/10">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-bold text-white">Redes Sociais</h3>
+                  <button
+                    onClick={() => setShowAddSocialLink(!showAddSocialLink)}
+                    className="flex items-center gap-2 px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors text-xs text-white"
+                  >
+                    <Plus size={14} />
+                    {showAddSocialLink ? "Cancelar" : "Adicionar"}
+                  </button>
+                </div>
+
+                {/* Add Social Link Form */}
+                {showAddSocialLink && (
+                  <div className="bg-black/50 border border-white/10 rounded-lg p-4 mb-4 space-y-3">
+                    <div>
+                      <label className="block text-xs text-gray-400 mb-1">Nome da Rede Social</label>
+                      <input
+                        type="text"
+                        value={newSocialLink.name}
+                        onChange={(e) => setNewSocialLink({ ...newSocialLink, name: e.target.value })}
+                        placeholder="Instagram, TikTok, etc"
+                        className="w-full px-3 py-2 bg-black border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-400 mb-1">URL da Rede Social</label>
+                      <input
+                        type="text"
+                        value={newSocialLink.url}
+                        onChange={(e) => setNewSocialLink({ ...newSocialLink, url: e.target.value })}
+                        placeholder="https://..."
+                        className="w-full px-3 py-2 bg-black border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-400 mb-1">Ícone (opcional)</label>
+                      <input
+                        type="text"
+                        value={newSocialLink.icon}
+                        onChange={(e) => setNewSocialLink({ ...newSocialLink, icon: e.target.value })}
+                        placeholder="instagram, tiktok, youtube, etc"
+                        className="w-full px-3 py-2 bg-black border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500"
+                      />
+                    </div>
+                    <button
+                      onClick={handleAddSocialLink}
+                      className="w-full px-3 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-white text-sm font-medium"
+                    >
+                      Adicionar Rede Social
+                    </button>
+                  </div>
+                )}
+
+                {/* Social Links List */}
+                <div className="space-y-2">
+                  {(profileForm.socialLinks || []).map((link) =>
+                    editingSocialLinkId === link.id ? (
+                      <div key={link.id} className="bg-black/50 border border-white/10 rounded-lg p-3 space-y-2">
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">Nome</label>
+                          <input
+                            type="text"
+                            value={editSocialLinkForm.name}
+                            onChange={(e) => setEditSocialLinkForm({ ...editSocialLinkForm, name: e.target.value })}
+                            className="w-full px-3 py-2 bg-black border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">URL</label>
+                          <input
+                            type="text"
+                            value={editSocialLinkForm.url}
+                            onChange={(e) => setEditSocialLinkForm({ ...editSocialLinkForm, url: e.target.value })}
+                            className="w-full px-3 py-2 bg-black border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">Ícone</label>
+                          <input
+                            type="text"
+                            value={editSocialLinkForm.icon}
+                            onChange={(e) => setEditSocialLinkForm({ ...editSocialLinkForm, icon: e.target.value })}
+                            className="w-full px-3 py-2 bg-black border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500"
+                          />
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={saveEditSocialLink}
+                            className="flex-1 px-2 py-1 bg-green-600 hover:bg-green-700 rounded text-white text-xs font-medium"
+                          >
+                            Salvar
+                          </button>
+                          <button
+                            onClick={() => setEditingSocialLinkId(null)}
+                            className="flex-1 px-2 py-1 bg-gray-600 hover:bg-gray-700 rounded text-white text-xs font-medium"
+                          >
+                            Cancelar
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div key={link.id} className="flex items-center justify-between bg-black/30 border border-white/10 rounded-lg p-3">
+                        <div className="flex-1">
+                          <p className="text-white font-medium text-sm">{link.name}</p>
+                          <p className="text-gray-400 text-xs truncate">{link.url}</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => startEditingSocialLink(link)}
+                            className="p-2 hover:bg-purple-600/30 rounded transition-colors"
+                          >
+                            <Edit2 size={14} className="text-purple-400" />
+                          </button>
+                          <button
+                            onClick={() => deleteSocialLink(link.id)}
+                            className="p-2 hover:bg-red-600/30 rounded transition-colors"
+                          >
+                            <Trash2 size={14} className="text-red-400" />
+                          </button>
+                        </div>
+                      </div>
+                    ),
+                  )}
+                  {(!profileForm.socialLinks || profileForm.socialLinks.length === 0) && (
+                    <p className="text-gray-500 text-xs text-center py-3">Nenhuma rede social adicionada</p>
+                  )}
+                </div>
+              </div>
+
               <button
                 onClick={handleSaveProfile}
                 disabled={isSavingProfile}
-                className={`w-full px-4 py-2 rounded-lg font-medium text-white transition-colors ${
+                className={`w-full px-4 py-2 rounded-lg font-medium text-white transition-colors mt-6 ${
                   saveStatus === "saved"
                     ? "bg-green-600 hover:bg-green-700"
                     : saveStatus === "saving"

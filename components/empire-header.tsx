@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { BadgeCheck } from "lucide-react"
+import { BadgeCheck, Instagram, Music, Youtube, Linkedin } from "lucide-react"
 
 interface EmpireHeaderProps {
   profile: {
@@ -9,7 +9,20 @@ interface EmpireHeaderProps {
     photo: string
     bio: string
     instagramLink: string
+    socialLinks?: Array<{
+      id: string
+      name: string
+      url: string
+      icon: string
+    }>
   }
+}
+
+const iconMap: Record<string, React.ComponentType<any>> = {
+  instagram: Instagram,
+  tiktok: Music,
+  youtube: Youtube,
+  linkedin: Linkedin,
 }
 
 export default function EmpireHeader({ profile }: EmpireHeaderProps) {
@@ -85,7 +98,28 @@ export default function EmpireHeader({ profile }: EmpireHeaderProps) {
 
       <div className="h-[1px] w-16 bg-gradient-to-r from-transparent via-gray-500/50 to-transparent mb-2" />
 
-      <p className="text-[10px] text-gray-400 font-mono uppercase tracking-[0.2em]">{profile.bio}</p>
+      <p className="text-[10px] text-gray-400 font-mono uppercase tracking-[0.2em] mb-4">{profile.bio}</p>
+
+      {/* Social Links */}
+      {(profile.socialLinks || []).length > 0 && (
+        <div className="flex items-center gap-3">
+          {profile.socialLinks?.map((link) => {
+            const IconComponent = iconMap[link.icon.toLowerCase()] || Instagram
+            return (
+              <a
+                key={link.id}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300 hover:scale-110 group"
+                title={link.name}
+              >
+                <IconComponent size={16} className="text-[#d4af37] group-hover:text-white transition-colors" />
+              </a>
+            )
+          })}
+        </div>
+      )}
     </header>
   )
 }
