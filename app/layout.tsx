@@ -7,12 +7,12 @@ import "./globals.css"
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 
 export const metadata: Metadata = {
-  title: "Bio Isa Oficial",
+  title: "WG Games",
   description: "Todos os links em um só lugar",
   icons: {
     icon: "",
   },
-    generator: 'Isa calistar'
+    generator: '0'
 }
 
 export const viewport: Viewport = {
