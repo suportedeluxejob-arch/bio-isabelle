@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { BadgeCheck, Instagram, Music, Youtube, Linkedin } from "lucide-react"
+import { BadgeCheck } from "lucide-react"
 
 interface EmpireHeaderProps {
   profile: {
@@ -13,16 +13,10 @@ interface EmpireHeaderProps {
       id: string
       name: string
       url: string
-      icon: string
+      iconUrl: string
+      color: string
     }>
   }
-}
-
-const iconMap: Record<string, React.ComponentType<any>> = {
-  instagram: Instagram,
-  tiktok: Music,
-  youtube: Youtube,
-  linkedin: Linkedin,
 }
 
 export default function EmpireHeader({ profile }: EmpireHeaderProps) {
@@ -103,21 +97,28 @@ export default function EmpireHeader({ profile }: EmpireHeaderProps) {
       {/* Social Links */}
       {(profile.socialLinks || []).length > 0 && (
         <div className="flex items-center gap-3">
-          {profile.socialLinks?.map((link) => {
-            const IconComponent = iconMap[link.icon.toLowerCase()] || Instagram
-            return (
-              <a
-                key={link.id}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300 hover:scale-110 group"
-                title={link.name}
-              >
-                <IconComponent size={16} className="text-[#d4af37] group-hover:text-white transition-colors" />
-              </a>
-            )
-          })}
+          {profile.socialLinks?.map((link) => (
+            <a
+              key={link.id}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-full hover:scale-110 transition-all duration-300 group"
+              title={link.name}
+              style={{
+                backgroundColor: `${link.color}20`,
+              }}
+            >
+              <img
+                src={link.iconUrl}
+                alt={link.name}
+                className="w-4 h-4 object-contain"
+                style={{
+                  filter: `drop-shadow(0 0 2px ${link.color})`,
+                }}
+              />
+            </a>
+          ))}
         </div>
       )}
     </header>

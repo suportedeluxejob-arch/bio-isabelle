@@ -29,9 +29,9 @@ export default function AdminPanel() {
   const [isSavingProfile, setIsSavingProfile] = useState(false)
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle")
   const [showAddSocialLink, setShowAddSocialLink] = useState(false)
-  const [newSocialLink, setNewSocialLink] = useState({ name: "", url: "", icon: "" })
+  const [newSocialLink, setNewSocialLink] = useState({ name: "", url: "", iconUrl: "", color: "#d4af37" })
   const [editingSocialLinkId, setEditingSocialLinkId] = useState<string | null>(null)
-  const [editSocialLinkForm, setEditSocialLinkForm] = useState({ name: "", url: "", icon: "" })
+  const [editSocialLinkForm, setEditSocialLinkForm] = useState({ name: "", url: "", iconUrl: "", color: "#d4af37" })
 
   // New Banner Form State
   const [showAddForm, setShowAddForm] = useState(false)
@@ -91,15 +91,15 @@ export default function AdminPanel() {
   }
 
   const handleAddSocialLink = () => {
-    if (!newSocialLink.name || !newSocialLink.url) return
+    if (!newSocialLink.name || !newSocialLink.url || !newSocialLink.iconUrl) return
     addSocialLink(newSocialLink)
-    setNewSocialLink({ name: "", url: "", icon: "" })
+    setNewSocialLink({ name: "", url: "", iconUrl: "", color: "#d4af37" })
     setShowAddSocialLink(false)
   }
 
   const startEditingSocialLink = (link: any) => {
     setEditingSocialLinkId(link.id)
-    setEditSocialLinkForm({ name: link.name, url: link.url, icon: link.icon })
+    setEditSocialLinkForm({ name: link.name, url: link.url, iconUrl: link.iconUrl, color: link.color })
   }
 
   const saveEditSocialLink = () => {
@@ -445,14 +445,33 @@ export default function AdminPanel() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-400 mb-1">Ícone (opcional)</label>
+                      <label className="block text-xs text-gray-400 mb-1">URL do Ícone</label>
                       <input
                         type="text"
-                        value={newSocialLink.icon}
-                        onChange={(e) => setNewSocialLink({ ...newSocialLink, icon: e.target.value })}
-                        placeholder="instagram, tiktok, youtube, etc"
+                        value={newSocialLink.iconUrl}
+                        onChange={(e) => setNewSocialLink({ ...newSocialLink, iconUrl: e.target.value })}
+                        placeholder="https://exemplo.com/icon.png"
                         className="w-full px-3 py-2 bg-black border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500"
                       />
+                      <p className="text-xs text-gray-500 mt-1">Qualquer imagem PNG ou SVG funciona</p>
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-400 mb-1">Cor do Ícone (Hex)</label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={newSocialLink.color}
+                          onChange={(e) => setNewSocialLink({ ...newSocialLink, color: e.target.value })}
+                          placeholder="#d4af37"
+                          className="flex-1 px-3 py-2 bg-black border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500"
+                        />
+                        <input
+                          type="color"
+                          value={newSocialLink.color}
+                          onChange={(e) => setNewSocialLink({ ...newSocialLink, color: e.target.value })}
+                          className="w-12 h-10 rounded-lg cursor-pointer border border-white/20"
+                        />
+                      </div>
                     </div>
                     <button
                       onClick={handleAddSocialLink}
@@ -487,13 +506,32 @@ export default function AdminPanel() {
                           />
                         </div>
                         <div>
-                          <label className="block text-xs text-gray-400 mb-1">Ícone</label>
+                          <label className="block text-xs text-gray-400 mb-1">URL do Ícone</label>
                           <input
                             type="text"
-                            value={editSocialLinkForm.icon}
-                            onChange={(e) => setEditSocialLinkForm({ ...editSocialLinkForm, icon: e.target.value })}
+                            value={editSocialLinkForm.iconUrl}
+                            onChange={(e) => setEditSocialLinkForm({ ...editSocialLinkForm, iconUrl: e.target.value })}
+                            placeholder="https://exemplo.com/icon.png"
                             className="w-full px-3 py-2 bg-black border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500"
                           />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-400 mb-1">Cor do Ícone (Hex)</label>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={editSocialLinkForm.color}
+                              onChange={(e) => setEditSocialLinkForm({ ...editSocialLinkForm, color: e.target.value })}
+                              placeholder="#d4af37"
+                              className="flex-1 px-3 py-2 bg-black border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500"
+                            />
+                            <input
+                              type="color"
+                              value={editSocialLinkForm.color}
+                              onChange={(e) => setEditSocialLinkForm({ ...editSocialLinkForm, color: e.target.value })}
+                              className="w-12 h-10 rounded-lg cursor-pointer border border-white/20"
+                            />
+                          </div>
                         </div>
                         <div className="flex gap-2">
                           <button

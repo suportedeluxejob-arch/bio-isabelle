@@ -9,7 +9,8 @@ export interface SocialLink {
   id: string
   name: string
   url: string
-  icon: string
+  iconUrl: string
+  color: string
 }
 
 export interface MainCard {
@@ -47,13 +48,15 @@ export const defaultData: SiteData = {
         id: "1",
         name: "Instagram",
         url: "https://www.instagram.com/_portugaesteticautomotiva/",
-        icon: "instagram",
+        iconUrl: "https://cdn-icons-png.flaticon.com/512/174/174855.png",
+        color: "#E4405F",
       },
       {
         id: "2",
         name: "TikTok",
         url: "https://www.tiktok.com",
-        icon: "tiktok",
+        iconUrl: "https://cdn-icons-png.flaticon.com/512/3046/3046121.png",
+        color: "#000000",
       },
     ],
   },
